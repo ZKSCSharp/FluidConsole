@@ -1,0 +1,53 @@
+# .gitignore pour projet FConsole (C# / .NET Standard)
+
+# Dossiers binaires
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+*.exe
+*.dll
+*.pdb
+*.app
+*.apk
+*.aab
+*.msi
+
+# Rider / VS Code / VS Settings
+.idea/
+.vscode/
+*.code-workspace
+*.csproj.user
+*.dbmdl
+
+# Logs
+*.log
+
+# Test results
+TestResults/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+
+# Publish output
+publish/
+
+# Others
+_ReSharper*/
+*.vspscc
+*.vssscc
+
+# DotCover
+.idea.DotSettings
+*.dotCover
