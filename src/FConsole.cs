@@ -1,5 +1,6 @@
 ﻿using Fluid_ConsoleManager.src.Core;
 using Fluid_ConsoleManager.src.Events;
+using Fluid_ConsoleManager.src.Handlers;
 using static Fluid_ConsoleManager.src.FConsole;
 
 namespace Fluid_ConsoleManager.src
@@ -18,76 +19,46 @@ namespace Fluid_ConsoleManager.src
 
         private static void Init()
         {
-            ConsoleEventHub.RegisterHandlersBatch(new Dictionary<string, ConsoleEventHandler<LogEvent>>()
-            {
-                {"Print", Log }
-            });
+            EventBus.Register(new LogHandler());
+            EventBus.Register(new GitHandler());
+            EventBus.Register(new ReadHandler());
+            EventBus.Register(new ColorHandler());
+            EventBus.Register(new DebugHandler());
+            EventBus.Register(new ClearHandler());
 
-            ConsoleEventHub.RegisterHandlersBatch(new Dictionary<string, ConsoleEventHandler<DebugEvent>>()
-            {
-                {"Debug", Debug }
-            });
+            FConsole.Log("FCONSOLE", "Initialization...", LogType.INFO); // PUT IT HERE BECAUSE IT CAN'T BE CALLED BEFORE IT'S NOT REGISTERED LOL
+            Thread.Sleep(500); // AESTHETIC THING, STILL USELESS
 
-            ConsoleEventHub.RegisterFuncsBatch(new Dictionary<string, Func<string>>()
-            {
-                {"Read", ReadEvent.Prompt},
-            });
-
-            ConsoleEventHub.RegisterHandlersBatch(new Dictionary<string, ConsoleEventHandler<ColorEvent>>()
-            {
-                { "ForeColor",  SetForeGroundColor },
-                { "BackColor", SetBackGroundColor },
-            });
-
-            Log("FCONSOLE", "Initialization...", LogType.INFO); // PUT IT HERE BECAUSE IT CAN'T BE CALLED BEFORE IT'S NOT REGISTERED LOL
-
-            Log("FCONSOLE_INIT_CORE", "Core Events Registered", LogType.SUCCESS);
+            FConsole.Log("FCONSOLE_INIT_CORE", "Core Events Registered", LogType.SUCCESS);
+            Thread.Sleep(500);
 
             ModulesManager.RegisterAll();
-            Log("FCONSOLE_INIT_MODS", "Additionnals Modules Registered", LogType.SUCCESS);
+            FConsole.Log("FCONSOLE_INIT_MODS", "Additionnals Modules Registered", LogType.SUCCESS);
+            Thread.Sleep(500);
 
-            Log("FCONSOLE", "Initialzation Completed !\n", LogType.SUCCESS);
-
-            ConsoleEventHub.Invoke(new ColorEvent(ConsoleColor.White), "ForeColor");
+            FConsole.Log("FCONSOLE", "Initialzation Completed !\n", LogType.SUCCESS);
+            
+            EventBus.Publish(new ColorEvent(ConsoleColor.White));
+            EventBus.Publish(new ClearEvent());
         }
 
         public static void Log(string message)
-            => ConsoleEventHub.Invoke(new LogEvent("SYS", message, LogType.DEFAULT), "Print");
+            => EventBus.Publish(new LogEvent("SYS", message, LogType.DEFAULT));
+        
         public static void Log(string senderName, string input, LogType logType = LogType.DEFAULT) 
-            => ConsoleEventHub.Invoke(new LogEvent(senderName, input, logType), "Print");
-        public static void Log(LogEvent evt) => evt.Log();
+            => EventBus.Publish(new LogEvent(senderName, input, logType));
+        public static void Log(LogEvent evt) => EventBus.Publish(evt);
 
-        public static string Read() => ConsoleEventHub.InvokeFunc("Read");
+        public static string Read() => Console.ReadLine();
 
         public static void Debug(Delegate method, string methodName)
-            => ConsoleEventHub.Invoke(new DebugEvent(method, methodName), "Debug");
+            => EventBus.Publish(new DebugEvent(method, methodName));
         public static void Debug(DebugEvent evt)
-        {
-            switch (evt.Method)
-            {
-                case Func<int> f:
-                    if (evt.Execute()) Log(new LogEvent(evt.MethodName, evt.Result.ToString(), LogType.SUCCESS));
-                    else
-                        Log(new LogEvent(evt.MethodName, "Error, Can't Execute Method", LogType.ERROR));
-                    break;
-                case Action a:
-                    a();
-                    break;
-                default:
-                    Log(new LogEvent(evt.MethodName, "Type not supported for now", LogType.ERROR));
-                    break;
-            }
-            if (evt.Result == null && evt.Method == null)
-                Log(new LogEvent("SYS", "Unknow Failure", LogType.CRITICAL));
-        }
+            => EventBus.Publish(evt);
 
         public static void SetForeGroundColor(ConsoleColor color) 
-            => ConsoleEventHub.Invoke(new ColorEvent(color), "ForeColor");
-        public static void SetForeGroundColor(ColorEvent evt) 
-            => evt.SetForeGround();
+            => EventBus.Publish(new ColorEvent(color));
         public static void SetBackGroundColor(ConsoleColor color) 
-            => ConsoleEventHub.Invoke(new ColorEvent(color), "BackColor");
-        public static void SetBackGroundColor(ColorEvent evt)
-            => evt.SetBackGround();
+            => EventBus.Publish(new ColorEvent(color, false));
     }
 }

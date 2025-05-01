@@ -1,4 +1,5 @@
 ﻿using Fluid_ConsoleManager.src.Core;
+using Fluid_ConsoleManager.src.Events.Interfaces;
 
 namespace Fluid_ConsoleManager.src.Modules
 {
@@ -7,18 +8,14 @@ namespace Fluid_ConsoleManager.src.Modules
 
         public static void Register()
         {
-            ConsoleEventHub.RegisterHandlersBatch(new Dictionary<string, ConsoleEventHandler<EventArgs>>()
-            {
-                { "Test", TestModule },
-                { "ProgressBar", DrawnProgressBar },
-            });
+
         }
 
-        internal static void DrawnProgressBar(EventArgs evt)
+        internal static void DrawnProgressBar(IEvent evt)
         {
             // Add Code
         }
-        internal static void TestModule(EventArgs evt)
+        internal static void TestModule(IEvent evt)
         {
             // Add Code
         }

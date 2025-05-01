@@ -1,9 +1,9 @@
-﻿using Fluid_ConsoleManager.src;
-using Fluid_ConsoleManager.src.Core;
+﻿using Fluid_ConsoleManager.src.Events.Interfaces;
+using Fluid_ConsoleManager.src.Handlers.Interface;
 
-namespace Fluid_ConsoleManager.src.Events
+namespace Fluid_ConsoleManager.src.Handlers
 {
-    public class DynamicEventHandler<T> : IConsoleEventHandler<EventArgs>
+    public class DynamicEventHandler<T> : IEventHandler<IEvent>
     {
         public Delegate Method { get; private set; }
 
@@ -12,7 +12,7 @@ namespace Fluid_ConsoleManager.src.Events
             Method = handleMethod;
         }
 
-        public void Handle(EventArgs evt)
+        public void Handle(IEvent evt)
         {
             if (Method is T typed)
                 try

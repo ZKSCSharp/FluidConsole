@@ -1,4 +1,5 @@
 ﻿using Fluid_ConsoleManager.src.Core;
+using Fluid_ConsoleManager.src.Events.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +13,13 @@ namespace Fluid_ConsoleManager.src.Modules
     {
         public static void Register()
         {
-            ConsoleEventHub.RegisterHandlersBatch(new Dictionary<string, ConsoleEventHandler<EventArgs>>()
-            {
-                { "ApiCall", ApiCall },
-                { "TestNet", TestNet },
-            });
         }
 
-        internal static void ApiCall(EventArgs evt)
+        internal static void ApiCall(IEvent evt)
         {
             // Add Code
         }
-        internal static void TestNet(EventArgs evt)
+        internal static void TestNet(IEvent evt)
         {
             // Add Code
         }

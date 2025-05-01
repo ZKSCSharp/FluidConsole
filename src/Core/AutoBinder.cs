@@ -7,6 +7,7 @@ namespace Fluid_ConsoleManager.src.Core
     {
         public static void BindAllModules(string namespc)
         {
+            /*
             Assembly assembly = Assembly.GetExecutingAssembly();
 
             var types = assembly.GetTypes()
@@ -16,6 +17,7 @@ namespace Fluid_ConsoleManager.src.Core
             {
                 FConsole.Log("BINDER", type.GetMethod("RegisterAll").Name);
             }
+            */
         }
     }
 }

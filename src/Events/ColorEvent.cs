@@ -1,12 +1,16 @@
-﻿namespace Fluid_ConsoleManager.src.Events
+﻿using Fluid_ConsoleManager.src.Events.Interfaces;
+
+namespace Fluid_ConsoleManager.src.Events
 {
-    public class ColorEvent : EventArgs
+    public class ColorEvent : IEvent
     {
         public ConsoleColor EvtColor { get; set; }
-        public ColorEvent(ConsoleColor color) => EvtColor = color;
-
-        public void SetForeGround() => Console.ForegroundColor = EvtColor;
-        public void SetBackGround() => Console.BackgroundColor = EvtColor;
+        public bool ForeOrBack { get; }
+        public ColorEvent(ConsoleColor color, bool fore = true)
+        { 
+            EvtColor = color; 
+            ForeOrBack = fore;
+        }
     }
 
 }
